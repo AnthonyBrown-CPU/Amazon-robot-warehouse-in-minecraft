@@ -81,6 +81,16 @@ Once the goal node reaches the closed list, the route is traced back through par
 
 A planned extension (listed in the design notes but never implemented) would have tracked which nodes were actively in use and reduced their traversal cost for robots heading the same direction — effectively forming traffic lanes to reduce congestion when multiple robots are active simultaneously.
 
+## Videos
+
+[![A* pathfinding algorithm visualised on an in-game monitor](https://img.youtube.com/vi/AKL4bRdkqCA/0.jpg)](https://www.youtube.com/watch?v=AKL4bRdkqCA)
+
+*A\* pathfinding visualised on an in-game monitor. The open and closed node lists expand in real time as the algorithm searches for a route.*
+
+[![Rednet alerting system and menu buttons demo](https://img.youtube.com/vi/uDYy6jWuRd8/0.jpg)](https://www.youtube.com/watch?v=uDYy6jWuRd8)
+
+*Demonstration of the rednet alerting system and the in-game menu buttons on the Master Server.*
+
 ## Planning Notes
 
 The warehouse was built in January 2015; the planning notes were written in March 2015, before the majority of the code existed.
