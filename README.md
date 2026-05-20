@@ -83,7 +83,7 @@ A planned extension (listed in the design notes but never implemented) would hav
 
 ## Planning Notes
 
-The full feature set was designed on paper before implementation started. These notes date from December 2015.
+The warehouse was built in January 2015; the planning notes were written in March 2015, before the majority of the code existed.
 
 | | |
 |---|---|
@@ -112,7 +112,6 @@ That was the point where the project was set down. Not because the idea was wron
 | `Pathing Server.lua` | A\* pathfinding. Accepts path requests from turtles and returns ordered waypoint sequences. Obstacle nodes loaded from the database and updateable at runtime. |
 | `Database Server.lua` | Persistent storage proxy. Translates rednet requests from all other servers into HTTP calls to the PHP backend. |
 | `Warehouse Monitor.lua` | Large in-game display. Real-time map of the warehouse floor, turtle positions, order status, and system health. |
-| `Order Server.lua` | Order queue management and turtle dispatch. |
 | `Item Server.lua` | Item catalogue. Tracks what is stored, where, and in what quantity. |
 | `Error Server.lua` | Error logging and broadcast. |
 | `Refuel Server.lua` | Turtle fuel management. |
