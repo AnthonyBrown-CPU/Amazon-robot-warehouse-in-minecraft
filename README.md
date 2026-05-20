@@ -1,20 +1,22 @@
 # Amazon Robot Warehouse in Minecraft
 
-A fully automated warehouse system built inside Minecraft using [CC: Tweaked](https://tweaked.cc/) (a fork of the original ComputerCraft mod), inspired by Amazon's warehouse robots. Programmable robots navigate a grid of chests, receive orders from a central server, and deliver items autonomously — routed around obstacles using a hand-rolled A\* pathfinding implementation.
+A fully automated warehouse system built inside Minecraft using ComputerCraft, inspired by Amazon's warehouse robots. Turtles (programmable robots) navigate a grid of chests, receive orders from a central server, and deliver items autonomously — routed around obstacles using a hand-rolled A\* pathfinding implementation.
 
 ![The warehouse floor before any code was written](assets/warehouse-overview.png)
 
-## What is CC: Tweaked?
+## What is ComputerCraft?
 
-CC: Tweaked is a Minecraft mod that adds programmable computers and robots (called turtles) to the game. Computers run Lua programs and communicate wirelessly via `rednet`. Robots are the same, but can also move around and interact with the world. What they can do depends on what tool you equip them with — a pickaxe lets them mine blocks, a sword lets them fight, a crafting table lets them craft items. The robots in this project were equipped with pickaxes so they could pick up and move chests (simulating lifting a shelf). They run on fuel — in this case, coal.
+ComputerCraft is a Minecraft mod that adds programmable computers and turtles to the game. Computers run Lua programs and communicate wirelessly via `rednet`. Turtles are the same, but can also move around and interact with the world. What they can do depends on what tool you equip them with — a pickaxe lets them mine blocks, a sword lets them fight, a crafting table lets them craft items. The turtles in this project were equipped with pickaxes so they could pick up and move chests (simulating lifting a shelf). They run on fuel — in this case, coal.
+
+The original ComputerCraft mod has since been retired. The active community fork is [CC: Tweaked](https://tweaked.cc/).
 
 ## The Idea
 
 After watching a YouTube video of Amazon's warehouse robots zipping around in coordinated swarms, the obvious question was: could you do something similar inside Minecraft?
 
-The answer started small — get a robot from point A to point B wirelessly. That grew into proper pathfinding so robots could navigate around walls, chests, other robots, and drop-off zones. Then came the discovery that CC: Tweaked computers can make HTTP requests. That changed everything.
+The answer started small — get a turtle from point A to point B wirelessly. That grew into proper pathfinding so turtles could navigate around walls, chests, other turtles, and drop-off zones. Then came the discovery that ComputerCraft computers can make HTTP requests. That changed everything.
 
-What if the warehouse had an actual storefront? A web interface where you could place orders — like Amazon — that would be written to a database, polled by the in-game computers, and fulfilled by the robots? Not just a toy, but an end-to-end system that emulates the whole thing.
+What if the warehouse had an actual storefront? A web interface where you could place orders — like Amazon — that would be written to a database, polled by the in-game computers, and fulfilled by the turtles? Not just a toy, but an end-to-end system that emulates the whole thing.
 
 That's what this is.
 
@@ -24,17 +26,17 @@ That's what this is.
 Web Browser
 └── PHP REST API (orders, items, chests, turtles, stations, nodes)
     └── Database Server (in-game computer)
-        ├── Order Server        ─ manages order queue, dispatches robots
+        ├── Order Server        ─ manages order queue, dispatches turtles
         ├── Pathing Server      ─ A* pathfinding, returns routes on request
         ├── Item Server         ─ item catalogue
         ├── Error Server        ─ error logging
-        ├── Refuel Server       ─ manages robot coal refueling
+        ├── Refuel Server       ─ manages turtle coal refueling
         ├── Minecraft Command Server
         ├── Warehouse Monitor   ─ large in-game display of the warehouse
         ├── Master Server       ─ system-wide orchestration and UI
         └── Station (x N)       ─ input / output / transfer drop-off points
 
-Robots (x N)
+Turtles (x N)
   └── On boot, broadcast ROLLCALL to Order Server
   └── Receive order → request path from Pathing Server → navigate → complete order
 ```
@@ -46,11 +48,11 @@ All inter-process communication happens over `rednet` (wireless modem messages).
 ### Order lifecycle
 
 1. An order is placed (via web interface or the in-game Master Server).
-2. The Order Server picks it up and assigns it to a ready robot.
-3. The robot broadcasts a `ROLLCALL` on boot and receives its assigned order, along with the full server topology.
-4. The robot requests a path from the Pathing Server: send current coordinates + destination, receive an ordered list of `{x, y}` waypoints.
-5. The robot navigates to the pickup station, collects the item, navigates to the destination chest, and deposits it.
-6. The robot reports `ORDER_COMPLETE` to the Order Server, which updates the database and either assigns a new order or sends it back to its harbour.
+2. The Order Server picks it up and assigns it to a ready turtle.
+3. The turtle broadcasts a `ROLLCALL` on boot and receives its assigned order, along with the full server topology.
+4. The turtle requests a path from the Pathing Server: send current coordinates + destination, receive an ordered list of `{x, y}` waypoints.
+5. The turtle navigates to the pickup station, collects the item, navigates to the destination chest, and deposits it.
+6. The turtle reports `ORDER_COMPLETE` to the Order Server, which updates the database and either assigns a new order or sends it back to its harbour.
 
 ### Stations
 
@@ -61,9 +63,9 @@ Stations are physical drop-off points with three modes:
 
 Stations use colour-coded ender chests to route items across the facility.
 
-### Robot fuelling
+### Turtle fuelling
 
-Robots run on coal. A dedicated refuelling zone with a Refuel Server keeps the fleet stocked. Robots check their fuel level and divert to the refuel station as needed.
+Turtles run on coal. A dedicated refuelling zone with a Refuel Server keeps the fleet stocked. Turtles check their fuel level and divert to the refuel station as needed.
 
 ## A\* Pathfinding
 
@@ -79,7 +81,7 @@ f = G + H
 
 Once the goal node reaches the closed list, the route is traced back through parent references and reversed into a forward-ordered waypoint sequence.
 
-A planned extension (listed in the design notes but never implemented) would have tracked which nodes were actively in use and reduced their traversal cost for robots heading the same direction — effectively forming traffic lanes to reduce congestion when multiple robots are active simultaneously.
+A planned extension (listed in the design notes but never implemented) would have tracked which nodes were actively in use and reduced their traversal cost for turtles heading the same direction — effectively forming traffic lanes to reduce congestion when multiple turtles are active simultaneously.
 
 ## Videos
 
@@ -102,36 +104,36 @@ The warehouse was built in January 2015; the planning notes were written in Marc
 
 ![Things to do](assets/planning-todo.png)
 
-The Monitor Server alone was planned to display: a live map of the warehouse floor with configurable overlay layers, real-time pathfinding visualisation, robot statuses and fuel levels, total items stored, current orders (waiting/active/complete), storage warnings, and selectable chest contents. `Warehouse Monitor.lua` at ~50KB is the largest file in the repository.
+The Monitor Server alone was planned to display: a live map of the warehouse floor with configurable overlay layers, real-time pathfinding visualisation, turtle statuses and fuel levels, total items stored, current orders (waiting/active/complete), storage warnings, and selectable chest contents. `Warehouse Monitor.lua` at ~50KB is the largest file in the repository.
 
 ## Where It Ended
 
-The system reached a working state — robots were navigating, orders were being assigned and completed, and the pathfinder was running. With one robot.
+The system reached a working state — turtles were navigating, orders were being assigned and completed, and the pathfinder was running. With one turtle.
 
-Multiple robots would collide. The pathfinder found routes around static obstacles, but it had no awareness of other robots moving through the same grid at the same time. Getting that right was the next big problem, and the planned congestion-aware pathfinding extension was never built.
+Multiple turtles would collide. The pathfinder found routes around static obstacles, but it had no awareness of other turtles moving through the same grid at the same time. Getting that right was the next big problem, and the planned congestion-aware pathfinding extension was never built.
 
-At the same time, the next requirement arrived: **full crash recovery**. After a server restart, each robot needed to figure out where it was, what order it was fulfilling, what was in its inventory, and whether it was heading to or from the delivery zone — all on its own. This ended up filling an A2 sheet of paper with state-machine logic, and that's where it stopped. The requirements weren't wrong, it just turned out to be more than was manageable at the time.
+At the same time, the next requirement arrived: **full crash recovery**. After a server restart, each turtle needed to figure out where it was, what order it was fulfilling, what was in its inventory, and whether it was heading to or from the delivery zone — all on its own. This ended up filling an A2 sheet of paper with state-machine logic, and that's where it stopped. The requirements weren't wrong, it just turned out to be more than was manageable at the time.
 
-Multi-robot collision avoidance is, as it turns out, the hard part of real warehouse automation too.
+Multi-turtle collision avoidance is, as it turns out, the hard part of real warehouse automation too.
 
 ## Files
 
-### CC: Tweaked (Lua)
+### ComputerCraft (Lua)
 
 | File | Description |
 |------|-------------|
-| `Master Server.lua` | System-wide orchestration. Manages the warehouse UI, robot fleet, station configuration, and overall system state (online / offline / repeat). |
-| `Order Server.lua` | Order queue management. Receives new orders from stations and the web interface, assigns them to available robots, handles rollcalls, and processes order completions. |
-| `Pathing Server.lua` | A\* pathfinding. Accepts path requests from robots and returns ordered waypoint sequences. Obstacle nodes loaded from the database and updateable at runtime. |
+| `Master Server.lua` | System-wide orchestration. Manages the warehouse UI, turtle fleet, station configuration, and overall system state (online / offline / repeat). |
+| `Order Server.lua` | Order queue management. Receives new orders from stations and the web interface, assigns them to available turtles, handles rollcalls, and processes order completions. |
+| `Pathing Server.lua` | A\* pathfinding. Accepts path requests from turtles and returns ordered waypoint sequences. Obstacle nodes loaded from the database and updateable at runtime. |
 | `Database Server.lua` | Persistent storage proxy. Translates rednet requests from all other servers into HTTP calls to the PHP backend. |
-| `Warehouse Monitor.lua` | Large in-game display. Real-time map of the warehouse floor, robot positions, order status, and system health. |
+| `Warehouse Monitor.lua` | Large in-game display. Real-time map of the warehouse floor, turtle positions, order status, and system health. |
 | `Item Server.lua` | Item catalogue. Tracks what is stored, where, and in what quantity. |
 | `Error Server.lua` | Error logging and broadcast. |
-| `Refuel Server.lua` | Robot fuel management. |
+| `Refuel Server.lua` | Turtle fuel management. |
 | `Minceaft Command Server.lua` | Issues Minecraft server commands. |
-| `Station.lua` | Template for input/output/transfer stations. Handles item scanning, order generation, and item handoff to robots. |
+| `Station.lua` | Template for input/output/transfer stations. Handles item scanning, order generation, and item handoff to turtles. |
 | `Station_startup.lua` | Station boot script. |
-| `Turtle.lua` | Early robot movement prototype (hardcoded coordinates, predates the pathfinding system). |
+| `Turtle.lua` | Early turtle movement prototype (hardcoded coordinates, predates the pathfinding system). |
 
 ### PHP Backend
 
@@ -142,7 +144,7 @@ Multi-robot collision avoidance is, as it turns out, the hard part of real wareh
 | `orders.php` | Order queue (new / active / hold / complete). |
 | `stations.php` | Station configuration and modes. |
 | `nodes.php` | Grid node types (obstacle, chest, station). Used by the pathing server. |
-| `turtles.php` | Robot registry and status. |
+| `turtles.php` | Turtle registry and status. |
 | `errors.php` | Error log. |
 
 ## License
