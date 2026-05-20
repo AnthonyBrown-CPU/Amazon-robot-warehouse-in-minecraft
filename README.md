@@ -97,9 +97,13 @@ A planned extension (listed in the design notes but never implemented) would hav
 
 The warehouse was built in January 2015; the planning notes were written in March 2015, before the majority of the code existed.
 
-| | | |
-|---|---|---|
-![Feature list](assets/planning-features.jpg) | ![UI wireframes](assets/planning-ui.jpg) | ![Things to do](assets/planning-todo.jpg)
+<table>
+  <tr>
+    <td><img src="assets/planning-features.jpg" alt="Feature list"></td>
+    <td><img src="assets/planning-ui.jpg" alt="UI wireframes"></td>
+    <td><img src="assets/planning-todo.jpg" alt="Things to do"></td>
+  </tr>
+</table>
 
 The Monitor Server alone was planned to display: a live map of the warehouse floor with configurable overlay layers, real-time pathfinding visualisation, turtle statuses and fuel levels, total items stored, current orders (waiting/active/complete), storage warnings, and selectable chest contents. `Warehouse Monitor.lua` at ~50KB is the largest file in the repository.
 
